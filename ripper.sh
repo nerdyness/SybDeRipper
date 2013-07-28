@@ -79,6 +79,7 @@ copyDVD() {
 			--msgbox "\nSomething bad happened to our little script. You probably don't have a $DVD_NAME file, if you do it might be corrupt. These are the last few lines from ddrescue:\n\n`tail $OUTPUT`" 25 60
 		welcome
 	else
+		rm -f "$DVD_LOG"
 		dialog  --title "SybDeRipper" \
 			--backtitle "Continue to rip this copy?"\
 			--yesno "Select yes to also rip this copy" 14 40 #2> $OUTPUT
