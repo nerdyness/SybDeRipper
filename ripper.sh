@@ -8,9 +8,12 @@ TMPDIR="`mktemp -d`"
 OUTPUT="$TMPDIR/tmp.output"
 # used to store data the will be sent to dialog
 INPUT="$TMPDIR/tmp.input"
-MYDIR="`dirname $0`"
 
-cd $MYDIR
+# change into the directory where SybDeRipper is installed
+MYDIR="`dirname $0`"
+cd "$MYDIR"
+# get the path
+MYDIR="`pwd`"
 
 # create empty file
 >$OUTPUT
@@ -190,11 +193,13 @@ ripTitle() {
 	getProfile
 	# Change into TMPDIR due to divx2pass.log
 	cd "$TMPDIR"
-	mencoder -dvd-device "$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
-	mencoder -dvd-device "$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=2 -o "`echo $DVD_NAME.$DVD_TITLE| sed -e 's/\.iso//'`".avi
-	cd -
+	pwd
+	echo mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
+	mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
+	mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=2 -o "`echo $DVD_NAME.$DVD_TITLE| sed -e 's/\.iso//'`".avi 
+	cd "$MYDIR"
 	# move the file out of the TMPDIR
-	mv "$TMPDIR/*.avi" .
+	mv "$TMPDIR/*.avi" "$MYDIR"
 }
 
 getProfile() {
