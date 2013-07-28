@@ -190,6 +190,7 @@ ripTitle() {
 	# Change into TMPDIR due to divx2pass.log
 	cd "$TMPDIR"
 	pwd
+	#FIXME: This should probably run in a screen sessions? Maybe write a screen config to run these commands?
 	echo mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
 	mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
 	mencoder -dvd-device "$MYDIR/$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=2 -o "`echo $DVD_NAME.$DVD_TITLE| sed -e 's/\.iso//'`".avi 
