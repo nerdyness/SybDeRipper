@@ -67,8 +67,8 @@ copyDVD() {
 	fi
 
 	#copy DVD
-	# FIXME doesn't return 1 so this script won't jump back to the beginning. Remove FIXME and use the comment below
-	FIXME # ddrescue /dev/sr0 "$DVD_NAME" "$DVD_LOG" 2>"$OUTPUT" 1>/dev/null
+#FIXME: Add a progress bar or some useful output!
+	ddrescue /dev/sr0 "$DVD_NAME" "$DVD_LOG" 2>"$OUTPUT" 1>/dev/null
 	RETVAL="$?"
 	if [ "$RETVAL" == "1" ]; then #died somehow
 		dialog  --title "SybDeRipper" \
@@ -127,8 +127,7 @@ getTitle() {
 	do
 		COUNT="$(($COUNT+1))"
 		echo "\"$COUNT\" \"$line\"" >> "$INPUT"
-	done < <(grep -e '^Title\|track' ./lsdvd.out)
-	#done < <(lsdvd "./$DVD_NAME" | sed -e 's/,\ Cells[[:print:]]*//' | grep '^Title\|track')
+	done < <(lsdvd "./$DVD_NAME" | sed -e 's/,\ Cells[[:print:]]*//' | grep '^Title\|track')
 
 	#get longest track (last line) and trim leading zeros.
 	LONGEST_TRACK="`tail -n 1 "$INPUT" | awk -F':' '{ print $2 }' | sed -e 's/[^[[:digit:]]*\([[:digit:]]*\)[^[[:digit:]]*/\1/' | sed -e 's/^0*//'`"
@@ -190,12 +189,12 @@ ripTitle() {
 	#ideally we ask here whether it's a cartoon or loud enough.
 	getProfile
 	# Change into TMPDIR due to divx2pass.log
-	#cd "$TMPDIR"
+	cd "$TMPDIR"
 	mencoder -dvd-device "$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=1 -o /dev/null
 	mencoder -dvd-device "$DVD_NAME" dvd://"$DVD_TITLE" -profile "$PROFILE" -xvidencopts pass=2 -o "`echo $DVD_NAME.$DVD_TITLE| sed -e 's/\.iso//'`".avi
-
-	DVD_LOG="`echo $DVD_NAME | sed -e 's/\.iso/\.log/'`"
-	#cd -
+	cd -
+	# move the file out of the TMPDIR
+	mv "$TMPDIR/*.avi" .
 }
 
 getProfile() {
