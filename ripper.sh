@@ -155,7 +155,7 @@ getTitle() {
 	#Wanna play a title?
 	dialog  --title "SybDeRipper" \
 		--backtitle "Play the selected title first?" \
-		--yesno "\nDid you want to play the title first to be sure?" 14 40
+		--yesno "\nDid you want to play the title first to be sure?\n\nJust so you know, if you do you can quit this via the \"q\" key." 14 40
 	TRUE="$?"
 	if [ "$TRUE" == "0" ]; then #yes
 		playTitle "$DVD_NAME" "$DVD_TITLE"
@@ -167,12 +167,7 @@ getTitle() {
 }
 
 playTitle() {
-	#Press q to exit
-	dialog  --title "SybDeRipper" \
-		--backtitle "Just FYI" \
-		--msgbox "\nJust so you know, you can quit this via the \"q\" key." 10 40
 	mplayer -dvd-device "$DVD_NAME" dvd://"$DVD_TITLE" -alang en -slang 999
-
 	
 	#Was this the right track? RipDVD "$DVD_NAME", ripTitle "name" "title"
 	dialog  --title "SybDeRipper" \
